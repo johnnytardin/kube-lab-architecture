@@ -1,0 +1,38 @@
+image:
+  tag: v1.30.1
+
+extraArgs:
+  v: 4
+  stderrthreshold: info
+  cordon-node-before-terminating: true
+  cloud-provider: aws
+  estimator: binpacking
+  expander: most-pods
+  balance-similar-node-groups: true
+  balancing-ignore-label: autoscaler-balancing-ignore
+  skip-nodes-with-local-storage: false
+  skip-nodes-with-system-pods: true
+  scale-down-utilization-threshold: 0.90
+  scale-down-unready-time: 10m
+  scale-down-unneeded-time: 5m
+  scale-down-non-empty-candidates-count: 10
+  scale-down-candidates-pool-min-count: 15
+  scale-down-delay-after-delete: 2m
+  scale-down-delay-after-add: 2m
+  scale-down-delay-after-failure: 2m
+  max-empty-bulk-delete: 20
+  max-graceful-termination-sec: 300
+  scan-interval: 10s
+  unremovable-node-recheck-timeout: 5m
+  
+nodeSelector:
+  kubernetes.io/os: linux
+  workload: management
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 1024Mi
+  requests:
+    cpu: 100m
+    memory: 1024Mi

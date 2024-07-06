@@ -1,0 +1,52 @@
+services:
+  server:
+    image: "rancher/k3s:v1.29.6-k3s2"
+    privileged: true
+    volumes:
+      - ./.kubeconfig:/kubeconfig
+      - server:/var/lib/rancher/k3s
+    command: server
+    tmpfs:
+      - /run
+      - /var/run
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+    ports:
+      - 6443:6443  # Kubernetes API Server
+      - 80:80      # Ingress controller port 80
+      - 443:443    # Ingress controller port 443
+    environment:
+      - K3S_TOKEN=secret
+      - K3S_KUBECONFIG_OUTPUT=/kubeconfig/kubeconfig.yaml
+      - K3S_KUBECONFIG_MODE=644
+    healthcheck:
+      test: ["CMD", "kubectl", "get", "nodes"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  agent:
+    image: "rancher/k3s:v1.29.6-k3s2"
+    privileged: true
+    # command: ln -sf /var/run/containerd/containerd.sock /run/k3s/containerd/containerd.sock && agent
+    tmpfs:
+    - /run
+    - /var/run
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+    restart: always
+    environment:
+    - K3S_URL=https://server:6443
+    - K3S_TOKEN=secret
+    volumes:
+    - agent:/var/lib/rancher/k3s
+
+volumes:
+  server: {}
+  agent: {}

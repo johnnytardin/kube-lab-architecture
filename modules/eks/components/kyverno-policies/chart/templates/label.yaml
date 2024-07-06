@@ -1,0 +1,20 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: {{ include "kyverno-policies.fullname" . }}-env-label
+  labels:
+  {{- include "kyverno-policies.labels" . | nindent 4 }}
+spec:
+  rules:
+  - name: add-env-label
+    match:
+      resources:
+        kinds:
+        - Pod
+    mutate:
+      patchStrategicMerge:
+        metadata:
+          labels:
+            env: sandbox
+  validationFailureAction: Enforce
+

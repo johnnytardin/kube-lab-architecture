@@ -1,0 +1,78 @@
+# -- Create PodDisruptionBudget resources for each control plane workload
+enablePodDisruptionBudget: true
+
+# -- Specify a deployment strategy for each control plane workload
+deploymentStrategy:
+  rollingUpdate:
+    maxUnavailable: 0
+    maxSurge: 25%
+
+# -- add PodAntiAffinity to each control plane workload
+enablePodAntiAffinity: false
+
+# nodeAffinity: 
+
+proxyInit:
+  ignoreOutboundPorts: "10000,10001,10002,10003,10004,10005"
+
+  image:
+    version: v2.1.0
+
+  closeWaitTimeoutSecs: 3600
+  privileged: true
+  runAsRoot: true
+
+# proxy configuration
+proxy:
+  outboundConnectTimeout: 2000ms
+  inboundConnectTimeout: 500ms
+
+  resources:
+    cpu:
+      request: 80m
+    memory:
+      limit: 300Mi
+      request: 30Mi
+
+  image:
+    version: stable-2.14.10
+
+  waitBeforeExitSeconds: 15
+
+  await: true
+
+  opaquePorts: "25,587,3306,4444,5432,6379,9300,11211"
+
+  shutdownGracePeriod: 90s
+
+# controller configuration
+controllerReplicas: 2
+controllerResources: &controller_resources
+  cpu: &controller_resources_cpu
+    limit: ""
+    request: 100m
+  memory:
+    limit: 250Mi
+    request: 50Mi
+destinationResources: *controller_resources
+
+# identity configuration
+identityResources:
+  cpu: *controller_resources_cpu
+  memory:
+    limit: 250Mi
+    request: 10Mi
+
+# heartbeat configuration
+heartbeatResources: *controller_resources
+
+# proxy injector configuration
+proxyInjectorResources: *controller_resources
+webhookFailurePolicy: Fail
+
+# service profile validator configuration
+spValidatorResources: *controller_resources
+
+nodeSelector:
+  kubernetes.io/os: linux
+  workload: management

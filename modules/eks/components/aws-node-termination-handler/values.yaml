@@ -1,0 +1,6 @@
+enableSpotInterruptionDraining: true
+
+enableScheduledEventDraining: true
+
+image:
+  tag: "v1.22.0"

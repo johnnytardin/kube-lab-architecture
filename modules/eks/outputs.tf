@@ -1,0 +1,1 @@
+output "host" { value = module.kubernetes.cluster.cluster_endpoint }
