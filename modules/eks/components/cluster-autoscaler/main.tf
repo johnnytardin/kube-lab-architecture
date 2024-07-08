@@ -13,4 +13,8 @@ resource "helm_release" "cluster-autoscaler" {
     value = var.kubernetes.cluster.cluster_name
   }
 
+  set {
+    name  = "awsRegion"
+    value = var.kubernetes.region
+  }
 }

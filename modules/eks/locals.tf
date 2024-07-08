@@ -1,29 +1,19 @@
-#TODO: Modificar para os testei na AWS
-# locals {
-#   instance_types = [
-#     {
-#       instance_type     = "m6i.large"
-#       weighted_capacity = "1"
-#     },
-#     {
-#       instance_type     = "m5.large"
-#       weighted_capacity = "1"
-#     },
-#     {
-#       instance_type     = "c6i.large"
-#       weighted_capacity = "1"
-#     },
-#     {
-#       instance_type     = "c5.large"
-#       weighted_capacity = "1"
-#     }
-#   ]
-# }
-
 locals {
   instance_types = [
     {
-      instance_type     = "t3.micro"
+      instance_type     = "m6i.large"
+      weighted_capacity = "1"
+    },
+    {
+      instance_type     = "m5.large"
+      weighted_capacity = "1"
+    },
+    {
+      instance_type     = "c6i.large"
+      weighted_capacity = "1"
+    },
+    {
+      instance_type     = "c5.large"
       weighted_capacity = "1"
     }
   ]
@@ -40,24 +30,23 @@ locals {
           ami_type      = "AL2_x86_64"
           subnet_ids    = var.subnet_ids
           min_size      = 2
-          max_size      = 3
+          max_size      = 5
         },
         general = {
-          name       = "general"
-          lifecycle  = "on-demand"
-          subnet_ids = var.subnet_ids
-          ami_type   = "AL2_x86_64"
-          # instance_type                            = "m6i.large"
-          instance_type = "t3.micro"
+          name          = "general"
+          lifecycle     = "on-demand"
+          subnet_ids    = var.subnet_ids
+          ami_type      = "AL2_x86_64"
+          instance_type = "m6i.large"
           min_size      = 0
-          max_size      = 0
+          max_size      = 2
         },
         batch = {
           name                                     = "batch"
           lifecycle                                = "spot"
           subnet_ids                               = var.subnet_ids
           min_size                                 = 0
-          max_size                                 = 0
+          max_size                                 = 2
           on_demand_base_capacity                  = 0
           on_demand_percentage_above_base_capacity = 0
           use_mixed_instances_policy               = true

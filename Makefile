@@ -7,9 +7,9 @@ TERRAFORM_S3_STATE_PATH ?= state/eks
 CURRENT_DIR := $(shell pwd)
 KUBECONFIG := $(CURRENT_DIR)/.kubeconfig/kubeconfig.yaml
 
-.PHONY: all kyverno kyverno-test kubearmor kubearmor-test terraform-init terraform-plan terraform-apply terraform-local k3s-start k3s-stop k3s-clean localstack-start localstack-stop localstack-clean set-env eks-getconfig deploy-test argocd-secret
+.PHONY: all kyverno-install kyverno-test kubearmor-test terraform-init terraform-plan terraform-apply terraform-local k3s-start k3s-stop k3s-clean localstack-start localstack-stop localstack-clean eks-getconfig argocd-secret argocd-forward
 
-all: kyverno-install kubearmor terraform-init terraform-apply k3s-start localstack-start set-env eks-getconfig
+all: kyverno-install kubearmor-test terraform-init terraform-apply k3s-start localstack-start eks-getconfig
 
 kyverno-install:
 	@echo "Installing Kyverno..."
@@ -74,17 +74,9 @@ localstack-clean:
 	@echo "Cleaning Localstack..."
 	docker compose -f docker-compose.localstack.yml down -v
 
-set-env:
-	@echo "Setting environment variables..."
-	@export KUBECONFIG=$(KUBECONFIG)
-
 eks-getconfig:
-	aws eks update-kubeconfig --region ${AWS_REGION} --name ${CLUSTER_NAME}
-
-deploy-test:
-	# Go to https://github.com/johnnytardin/kube-lab
-	helm install kube-lab deploy/ --namespace kube-lab --create-namespace
-	curl -H "Host: kube-lab.local" http://localhost
+	@echo "Updating kubeconfig for EKS cluster: $(CLUSTER_NAME)"
+	aws eks update-kubeconfig --region ${AWS_REGION} --name $(CLUSTER_NAME)
 
 argocd-secret:
 	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
