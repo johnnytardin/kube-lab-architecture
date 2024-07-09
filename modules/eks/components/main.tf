@@ -71,3 +71,21 @@ module "argocd" {
   environment = var.environment
   components  = var.components
 }
+
+module "prometheus" {
+  source      = "./prometheus"
+  environment = var.environment
+  components  = var.components
+}
+
+module "gatekeeper" {
+  source      = "./gatekeeper"
+  environment = var.environment
+  components  = var.components
+}
+
+module "grafana" {
+  source      = "./grafana"
+  environment = var.environment
+  components  = var.components
+}

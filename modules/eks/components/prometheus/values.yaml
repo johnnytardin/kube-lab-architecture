@@ -1,0 +1,23 @@
+nodeSelector:
+  kubernetes.io/os: linux
+  workload: management
+
+server:
+  image:
+    tag: v2.50.1
+
+  persistentVolume:
+    enabled: false
+
+kube-state-metrics:
+  enabled: true
+
+prometheus-pushgateway:
+  enabled: false
+
+prometheus-node-exporter:
+  enabled: true
+
+alertmanager:
+  enabled: false
+

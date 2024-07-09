@@ -82,4 +82,10 @@ argocd-secret:
 	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 
 argocd-forward:
-	kubectl port-forward svc/argo-cd-argocd-server -n argocd 8080:443
+	kubectl port-forward svc/argo-cd-argocd-server -n argocd 8000:443
+
+prometheus-forward:
+	kubectl port-forward svc/prometheus-server -n prometheus 8001:80
+
+grafana-forward:
+	kubectl port-forward svc/grafana -n grafana 8002:80

@@ -103,6 +103,18 @@ locals {
         enabled   = true
         namespace = "kyverno"
       }
+      prometheus = {
+        enabled   = true
+        namespace = "prometheus"
+      }
+      gatekeeper = {
+        enabled = true
+        namespace = "gatekeeper"
+      }
+      grafana = {
+        enabled = true
+        namespace = "grafana"
+      }
     }
   }
 }

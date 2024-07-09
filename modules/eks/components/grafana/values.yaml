@@ -1,0 +1,49 @@
+image:
+  tag: 11.0.1
+
+nodeSelector:
+  kubernetes.io/os: linux
+  workload: management
+
+datasources:
+ datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      access: proxy
+      url: http://prometheus-server.prometheus.svc.cluster.local
+      isDefault: true
+      editable: true
+      jsonData:
+        httpMethod: POST
+        manageAlerts: true
+        prometheusType: Prometheus
+        prometheusVersion: 2.50.0
+        cacheLevel: 'None'
+        disableRecordingRules: false
+        incrementalQueryOverlapWindow: 10m
+
+env:
+  GF_AUTH_ANONYMOUS_ENABLED: true
+  GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+
+dashboardProviders:
+ dashboardproviders.yaml:
+   apiVersion: 1
+   providers:
+   - name: 'default'
+     orgId: 1
+     folder: ''
+     type: file
+     disableDeletion: false
+     editable: true
+     options:
+       path: /var/lib/grafana/dashboards/default
+
+dashboards:
+  default:
+    kubernetes-stats:
+      gnetId: 13332
+      revision: 12
+      datasource: Prometheus

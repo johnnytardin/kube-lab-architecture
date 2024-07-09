@@ -1,0 +1,18 @@
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorPolicy
+metadata:
+  name: ksp-group-1-proc-path-block
+spec:
+  selector:
+    matchLabels:
+      group: sandbox
+  process:
+    matchPaths:
+    - path: /usr/bin/nmap
+      action: Block
+    - path: /bin/nmap
+      action: Block
+    - path: /usr/local/bin/nmap
+      action: Block
+  action:
+    Block
