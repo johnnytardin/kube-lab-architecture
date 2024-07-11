@@ -108,11 +108,11 @@ locals {
         namespace = "prometheus"
       }
       gatekeeper = {
-        enabled = true
+        enabled   = true
         namespace = "gatekeeper"
       }
       grafana = {
-        enabled = true
+        enabled   = true
         namespace = "grafana"
       }
     }

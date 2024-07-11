@@ -15,5 +15,11 @@ module "components" {
   kubernetes  = module.kubernetes
   environment = var.environment
   components  = local.components
+
+  providers = {
+    helm = helm
+  }
+
+  depends_on = [module.kubernetes]
 }
 

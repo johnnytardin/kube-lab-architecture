@@ -89,3 +89,6 @@ prometheus-forward:
 
 grafana-forward:
 	kubectl port-forward svc/grafana -n grafana 8002:80
+
+secret-admin:
+	kubectl get secret -n kube-system admin -o=jsonpath="{.data.token}"
