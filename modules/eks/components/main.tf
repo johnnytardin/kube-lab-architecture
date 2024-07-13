@@ -19,12 +19,6 @@ module "metrics-server" {
   components  = var.components
 }
 
-module "linkerd" {
-  source      = "./linkerd"
-  environment = var.environment
-  components  = var.components
-}
-
 module "ingress" {
   source      = "./ingress"
   kubernetes  = var.kubernetes
@@ -88,4 +82,26 @@ module "grafana" {
   source      = "./grafana"
   environment = var.environment
   components  = var.components
+}
+
+module "linkerd" {
+  source      = "./linkerd"
+  environment = var.environment
+  components  = var.components
+
+  depends_on = [
+    module.aws-node-termination-handler,
+    module.cluster-autoscaler,
+    module.metrics-server,
+    module.ingress,
+    module.keda,
+    module.kyverno,
+    module.kyverno-policies,
+    module.kubearmor,
+    module.kubearmor-policies,
+    module.argocd,
+    module.prometheus,
+    module.gatekeeper,
+    module.grafana,
+  ]
 }
