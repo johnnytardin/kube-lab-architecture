@@ -29,7 +29,7 @@ locals {
           instance_type = "m6i.large"
           ami_type      = "AL2_x86_64"
           subnet_ids    = var.subnet_ids
-          min_size      = 2
+          min_size      = 1
           max_size      = 5
         },
         general = {

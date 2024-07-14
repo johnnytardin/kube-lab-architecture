@@ -4,26 +4,16 @@ on:
   push:
     branches:
       - main
+    tags:
+      - '*'
 
 jobs:
-  deplot-to-aws:
+  deploy-to-aws:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Install AWS cli
-        run: |
-          if ! command -v aws &> /dev/null
-          then
-            echo "AWS CLI not found, installing..."
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-          else
-            echo "AWS CLI is already installed"
-          fi
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -35,11 +25,10 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.9.1
+          terraform_version: 1.9.2
 
       - name: Terraform Init
         run: terraform init -backend-config="bucket=${{ secrets.TERRAFORM_S3_PRODUCTION_STATE_BUCKET }}" -backend-config="key=${{ secrets.TERRAFORM_S3_STATE_PATH }}"
-
         working-directory: .
 
       - name: Terraform Plan
@@ -47,5 +36,6 @@ jobs:
         working-directory: .
 
       - name: Terraform Apply
+        if: startsWith(github.ref, 'refs/tags/')
         run: terraform apply -auto-approve tfplan
         working-directory: .

@@ -1,10 +1,3 @@
-module "aws-node-termination-handler" {
-  source      = "./aws-node-termination-handler"
-  kubernetes  = var.kubernetes
-  environment = var.environment
-  components  = var.components
-}
-
 module "cluster-autoscaler" {
   source      = "./cluster-autoscaler"
   kubernetes  = var.kubernetes
@@ -12,11 +5,22 @@ module "cluster-autoscaler" {
   components  = var.components
 }
 
+module "aws-node-termination-handler" {
+  source      = "./aws-node-termination-handler"
+  kubernetes  = var.kubernetes
+  environment = var.environment
+  components  = var.components
+
+  depends_on = [module.cluster-autoscaler]
+}
+
 module "metrics-server" {
   source      = "./metrics-server"
   kubernetes  = var.kubernetes
   environment = var.environment
   components  = var.components
+
+  depends_on = [module.cluster-autoscaler]
 }
 
 module "ingress" {
@@ -24,18 +28,24 @@ module "ingress" {
   kubernetes  = var.kubernetes
   environment = var.environment
   components  = var.components
+
+  depends_on = [module.cluster-autoscaler]
 }
 
 module "keda" {
   source      = "./keda"
   environment = var.environment
   components  = var.components
+
+  depends_on = [module.cluster-autoscaler]
 }
 
 module "kyverno" {
   source      = "./kyverno"
   environment = var.environment
   components  = var.components
+
+  depends_on = [module.cluster-autoscaler]
 }
 
 module "kyverno-policies" {
@@ -50,6 +60,8 @@ module "kubearmor" {
   source      = "./kubearmor"
   environment = var.environment
   components  = var.components
+
+  depends_on = [module.cluster-autoscaler]
 }
 
 module "kubearmor-policies" {
@@ -64,24 +76,32 @@ module "argocd" {
   source      = "./argocd"
   environment = var.environment
   components  = var.components
+
+  depends_on = [module.cluster-autoscaler]
 }
 
 module "prometheus" {
   source      = "./prometheus"
   environment = var.environment
   components  = var.components
+
+  depends_on = [module.cluster-autoscaler]
 }
 
 module "gatekeeper" {
   source      = "./gatekeeper"
   environment = var.environment
   components  = var.components
+
+  depends_on = [module.cluster-autoscaler]
 }
 
 module "grafana" {
   source      = "./grafana"
   environment = var.environment
   components  = var.components
+
+  depends_on = [module.cluster-autoscaler]
 }
 
 module "linkerd" {
