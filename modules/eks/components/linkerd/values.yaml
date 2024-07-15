@@ -46,7 +46,7 @@ proxy:
   shutdownGracePeriod: 90s
 
 # controller configuration
-controllerReplicas: 2
+controllerReplicas: 1
 controllerResources: &controller_resources
   cpu: &controller_resources_cpu
     limit: ""
